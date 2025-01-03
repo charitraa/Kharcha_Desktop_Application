@@ -1,0 +1,190 @@
+﻿ @page "/dashboard" 
+
+ <div class="dashboard-container"> 
+     <!-- financial overview section --> 
+     <section class="mb-4"> 
+         <h2 class="mb-4">financial overview</h2> 
+         <div class="row g-4"> 
+             <div class="col-md-3"> 
+                 <div class="overview-card"> 
+                     <div class="d-flex justify-content-between mb-2"> 
+                         <span class="text-muted">total balance</span> 
+                         <i class="bi bi-wallet2"></i> 
+                     </div> 
+                     <h3 class="mb-0">$24,500.00</h3> 
+                 </div> 
+             </div> 
+             <div class="col-md-3"> 
+                 <div class="overview-card"> 
+                     <div class="d-flex justify-content-between mb-2"> 
+                         <span class="text-muted">income</span> 
+                         <i class="bi bi-star"></i> 
+                     </div> 
+                     <h3 class="mb-0">$8,800.00</h3> 
+                     <small class="text-muted">month to date</small> 
+                 </div> 
+             </div> 
+             <div class="col-md-3"> 
+                 <div class="overview-card"> 
+                     <div class="d-flex justify-content-between mb-2"> 
+                         <span class="text-muted">expenses</span> 
+                         <i class="bi bi-graph-down"></i> 
+                     </div> 
+                     <h3 class="mb-0">$4,200.00</h3> 
+                     <small class="text-muted">month to date</small> 
+                 </div> 
+             </div> 
+             <div class="col-md-3"> 
+                 <div class="overview-card"> 
+                     <div class="d-flex justify-content-between mb-2"> 
+                         <span class="text-muted">total debt</span> 
+                         <i class="bi bi-credit-card"></i> 
+                     </div> 
+                     <h3 class="mb-0">$12,000.00</h3> 
+                     <small class="text-muted">3 pending payments</small> 
+                 </div> 
+             </div> 
+         </div> 
+     </section> 
+
+     <!-- pending debts section --> 
+     <section class="mb-4"> 
+         <div class="d-flex justify-content-between align-items-center mb-3"> 
+             <h3>pending debts</h3> 
+             <div class="dropdown"> 
+                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
+                     filter 
+                 </button> 
+                 <ul class="dropdown-menu"> 
+                     <li><a class="dropdown-item" href="#">all</a></li> 
+                     <li><a class="dropdown-item" href="#">this month</a></li> 
+                     <li><a class="dropdown-item" href="#">last month</a></li> 
+                 </ul> 
+             </div> 
+         </div> 
+         <div class="table-responsive"> 
+             <table class="table"> 
+                 <tbody> 
+                     <tr> 
+                         <td>utility payment</td> 
+                         <td class="text-muted">due date: jan 15, 2025</td> 
+                         <td class="text-end">$250.00</td> 
+                     </tr> 
+                     <tr> 
+                         <td>utility payment</td> 
+                         <td class="text-muted">due date: jan 15, 2025</td> 
+                         <td class="text-end">$250.00</td> 
+                     </tr> 
+                 </tbody> 
+             </table> 
+         </div> 
+     </section> 
+
+     <!-- recent transactions section --> 
+     <section> 
+         <div class="d-flex justify-content-between align-items-center mb-3"> 
+             <h3>recent transactions</h3> 
+             <div class="d-flex gap-3"> 
+                 <input type="search" class="form-control" placeholder="search..."> 
+                 <div class="dropdown"> 
+                     <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
+                         filter 
+                     </button> 
+                     <ul class="dropdown-menu"> 
+                         <li><a class="dropdown-item" href="#">all</a></li> 
+                         <li><a class="dropdown-item" href="#">income</a></li> 
+                         <li><a class="dropdown-item" href="#">expense</a></li> 
+                     </ul> 
+                 </div> 
+             </div> 
+         </div> 
+         <div class="table-responsive"> 
+             <table class="table"> 
+                 <tbody> 
+                     <tr> 
+                         <td> 
+                             <div class="d-flex align-items-center gap-2"> 
+                                 <div class="transaction-icon"> 
+                                     <i class="bi bi-cart"></i> 
+                                 </div> 
+                                 online shopping 
+                             </div> 
+                         </td> 
+                         <td class="text-muted">jan 15, 2025</td> 
+                         <td class="text-end">$250.00</td> 
+                     </tr> 
+                     <tr> 
+                         <td> 
+                             <div class="d-flex align-items-center gap-2"> 
+                                 <div class="transaction-icon bg-success"> 
+                                     <i class="bi bi-wallet2"></i> 
+                                 </div> 
+                                 salary deposit 
+                             </div> 
+                         </td> 
+                         <td class="text-muted">jan 15, 2025</td> 
+                         <td class="text-end text-success">$250.00</td> 
+                     </tr> 
+                     <tr> 
+                         <td> 
+                             <div class="d-flex align-items-center gap-2"> 
+                                 <div class="transaction-icon"> 
+                                     <i class="bi bi-cart"></i> 
+                                 </div> 
+                                 online shopping 
+                             </div> 
+                         </td> 
+                         <td class="text-muted">jan 15, 2025</td> 
+                         <td class="text-end">$250.00</td> 
+                     </tr> 
+                 </tbody> 
+             </table> 
+         </div> 
+     </section> 
+ </div> 
+
+ @* @code {  *@
+ @*     // add properties and methods for data binding and events  *@
+ @*     protected override async task oninitializedasync()  *@
+ @*     {  *@
+ @*         // todo: load user's financial data  *@
+ @*         await base.oninitializedasync();  *@
+ @*     }  *@
+ @* }  *@
+
+ <style> 
+     .dashboard-container { 
+         padding: 1rem; 
+     } 
+
+     .overview-card { 
+         background: white; 
+         padding: 1.5rem; 
+         border-radius: 8px; 
+         box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+     } 
+
+     .transaction-icon { 
+         width: 40px; 
+         height: 40px; 
+         border-radius: 50%; 
+         background-color: #fee2e2; 
+         display: flex; 
+         align-items: center; 
+         justify-content: center; 
+         color: #dc2626; 
+     } 
+
+         .transaction-icon.bg-success { 
+             background-color: #dcfce7; 
+             color: #16a34a; 
+         } 
+
+     .table td { 
+         vertical-align: middle; 
+     } 
+
+     .dropdown-toggle::after { 
+         margin-left: 0.5em; 
+     } 
+ </style> 
