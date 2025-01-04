@@ -10,7 +10,10 @@ namespace Expenses_tracker.Models
 
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string Description { get; set; }
+        public string Title { get; set; }
+        public string Notes { get; set; }
+        public string Tags { get; set; }
+
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public TransactionType Type { get; set; }
@@ -19,7 +22,8 @@ namespace Expenses_tracker.Models
         public enum TransactionType
         {
             Income,
-            Expense
+            Expense,
+            Debt
         }
     }
     

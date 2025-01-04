@@ -67,7 +67,7 @@
 
     <ItemGroup>
       <Folder Include="Images\" />
-      <Folder Include="Services\" />
+      <Folder Include="Database\" />
       <Folder Include="Platforms\NewFolder\" />
     </ItemGroup>
 

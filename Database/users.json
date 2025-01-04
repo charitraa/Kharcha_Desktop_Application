@@ -1,0 +1,29 @@
+[
+  {
+    "Id": "029a9dc3-cd67-4914-a29c-7f6dc914f95c",
+    "Username": "charitra shrestha",
+    "Password": "KA\u002BZetmoMqgx0XHh6oWLl5z9xNmIMAy6QzaRYoLD\u002BEc=",
+    "type": "NRP",
+    "TotalBalance": 0,
+    "Transactions": [],
+    "Debts": []
+  },
+  {
+    "Id": "164060aa-6cf2-409a-80a8-57c21df2ba02",
+    "Username": "Jesish Khadka",
+    "Password": "Mrs/boo8ZVC5bFRyoE2YKLOKNoQl6E5WfuG3AkkzB7k=",
+    "type": "NRP",
+    "TotalBalance": 0,
+    "Transactions": [],
+    "Debts": []
+  },
+  {
+    "Id": "ca3136dd-28fd-43d0-9bc7-63e160c692b7",
+    "Username": "Ravi Shrestha",
+    "Password": "in0O6DgVR2JFqm7Ccsg1NtfXCCA1YEkuSqcirQ4ix5c=",
+    "type": "NRP",
+    "TotalBalance": 0,
+    "Transactions": [],
+    "Debts": []
+  }
+]
