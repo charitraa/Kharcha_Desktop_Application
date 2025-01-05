@@ -4,9 +4,110 @@
     "Username": "charitra shrestha",
     "Password": "KA\u002BZetmoMqgx0XHh6oWLl5z9xNmIMAy6QzaRYoLD\u002BEc=",
     "type": "NRP",
-    "TotalBalance": 0,
-    "Transactions": [],
-    "Debts": []
+    "TotalBalance": 48990,
+    "Transactions": [
+      {
+        "Id": "0398fc57-e548-4598-bf02-105c0435db86",
+        "Title": "Monthly Salary",
+        "Notes": "Salary ",
+        "Tags": "Salary",
+        "Amount": 15000,
+        "Date": "2025-01-04",
+        "Type": "Income"
+      },
+      {
+        "Id": "df75a02c-fd10-4cb8-8abf-4eecc8355a29",
+        "Title": "Weekly Salary",
+        "Notes": "Salary ",
+        "Tags": "Salary",
+        "Amount": 200,
+        "Date": "2025-01-04",
+        "Type": "Income"
+      },
+      {
+        "Id": "3d73a3d6-caed-4555-a1a5-8b53323560e1",
+        "Title": "Dating",
+        "Notes": "Food",
+        "Tags": "Dating",
+        "Amount": 2500,
+        "Date": "2025-01-05",
+        "Type": "Expense"
+      },
+      {
+        "Id": "6381bb6e-5311-4485-a860-39be958aee4a",
+        "Title": "Home Rent",
+        "Notes": "Rent",
+        "Tags": "Rent",
+        "Amount": 15000,
+        "Date": "2025-01-05",
+        "Type": "Expense"
+      },
+      {
+        "Id": "b00973d5-a8cc-4a0b-8fe4-19e6cad5cf08",
+        "Title": "Bouns",
+        "Notes": "Jesish has given",
+        "Tags": "Salary",
+        "Amount": 50000,
+        "Date": "2025-01-05",
+        "Type": "Income"
+      },
+      {
+        "Id": "045a92df-b3db-4dc4-987f-17952dc53142",
+        "Title": "Dating",
+        "Notes": "Food",
+        "Tags": "Rent",
+        "Amount": 200,
+        "Date": "2025-01-05",
+        "Type": "Expense"
+      },
+      {
+        "Id": "09824c72-7cb7-4c19-82cb-0957cacb688f",
+        "Title": "Dating",
+        "Notes": "Food",
+        "Tags": "Dating",
+        "Amount": 10,
+        "Date": "2025-01-05",
+        "Type": "Expense"
+      },
+      {
+        "Id": "573b853f-54e8-413f-9dd4-9e5232dde6de",
+        "Title": "Monthly Salary",
+        "Notes": "Salary ",
+        "Tags": "Salary",
+        "Amount": 2000,
+        "Date": "2025-01-05",
+        "Type": "Income"
+      },
+      {
+        "Id": "ee94a2ae-67f1-4fab-b918-0f55b468e798",
+        "Title": "Pathau",
+        "Notes": "online service",
+        "Tags": "indrive",
+        "Amount": 200,
+        "Date": "2025-01-05",
+        "Type": "Expense"
+      }
+    ],
+    "Debts": [
+      {
+        "Id": "667f2e32-5e02-492e-963d-40e0ad708179",
+        "Notes": "Toilet",
+        "Tags": "Toilet",
+        "Amount": 150,
+        "Source": "Toilet",
+        "DueDate": "0001-01-18",
+        "IsPaid": false
+      },
+      {
+        "Id": "576fe301-d732-4aa4-ad9e-ffcde6015425",
+        "Notes": "puoife",
+        "Tags": "loan",
+        "Amount": 500,
+        "Source": "jesish",
+        "DueDate": "2025-01-01",
+        "IsPaid": true
+      }
+    ]
   },
   {
     "Id": "164060aa-6cf2-409a-80a8-57c21df2ba02",
@@ -21,6 +122,25 @@
     "Id": "ca3136dd-28fd-43d0-9bc7-63e160c692b7",
     "Username": "Ravi Shrestha",
     "Password": "in0O6DgVR2JFqm7Ccsg1NtfXCCA1YEkuSqcirQ4ix5c=",
+    "type": "NRP",
+    "TotalBalance": -500,
+    "Transactions": [],
+    "Debts": [
+      {
+        "Id": "bca80e57-65d1-4462-a000-685980040e38",
+        "Notes": "New Years",
+        "Tags": "New Years",
+        "Amount": 500,
+        "Source": "Friends",
+        "DueDate": "2025-01-01",
+        "IsPaid": true
+      }
+    ]
+  },
+  {
+    "Id": "313302ba-5a94-40c7-bb52-10ed6e8634e1",
+    "Username": "doraemon",
+    "Password": "WZRHGrsBESr8wYFZ9sx0tPURuZgG2lmzyvWpwXPKz8U=",
     "type": "NRP",
     "TotalBalance": 0,
     "Transactions": [],

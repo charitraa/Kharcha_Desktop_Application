@@ -1,8 +1,8 @@
 ﻿@page "/Signup"
 @using Expenses_tracker.Components.Layout
 @layout AuthLayout
-@using Expenses_tracker.Services 
-@inject Expenses_tracker.Services.AuthServices AuthServices 
+@using Expenses_tracker.Services
+@inject Expenses_tracker.Services.AuthServices AuthServices
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -78,7 +78,7 @@
                     {
                         <p class=" align-content-center mt-3 @(IsSuccess ? "text-success" : "text-danger")">@Message</p>
                     }
-                    
+
 
                     <div class="text-center">
                         <span>Already have an account? </span>

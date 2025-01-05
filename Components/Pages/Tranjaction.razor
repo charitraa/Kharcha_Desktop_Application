@@ -1,0 +1,195 @@
+﻿@page "/transactions"
+@using Expenses_tracker.Services
+@using Expenses_tracker.Models
+
+<div class="container mt-4">
+    <!-- Add Income and Expense Buttons -->
+    <div class="row g-4">
+        <!-- Button Section -->
+        <div class="col-12">
+            <div class="d-flex justify-content-end mb-4">
+                <button class="btn btn-outline-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#addIncomeModal">+ Add Income</button>
+                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addExpenseModal">+ Add Expense</button>
+            </div>
+        </div>
+
+        <!-- Card Section -->
+        <div class="row-cols-4 pt-4">
+            <div class="overview-card">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Total No of Transactions</span>
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <h3 class="mb-0">@TotalNumberofTransactions</h3>
+            </div>
+            <div class="overview-card">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Total No of Transactions</span>
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <h3 class="mb-0">@TotalTransactions</h3>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Search and Filter Section -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div class="d-flex flex-wrap">
+            <!-- Search Box -->
+            <input type="text" class="form-control me-2 mb-2" placeholder="Search by title, tags, or notes" @bind="SearchTerm" style="min-width: 250px;" />
+
+            <!-- Transaction Type Filter -->
+            <select class="form-select me-2 mb-2" @bind="SelectedType" style="min-width: 150px;">
+                <option value="">All Types</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+                <option value="Debt">Debt</option>
+            </select>
+
+            <!-- Date Range Filter -->
+            <div class="d-flex align-items-center mb-2">
+                <input type="date" class="form-control me-2" @bind="StartDate" style="min-width: 150px;" />
+                <span class="me-2">to</span>
+                <input type="date" class="form-control" @bind="EndDate" style="min-width: 150px;" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th @onclick="() => SortByColumn(nameof(Transactions.Date))">Date</th>
+                    <th @onclick="() => SortByColumn(nameof(Transactions.Title))">Title</th>
+                    <th @onclick="() => SortByColumn(nameof(Transactions.Type))">Type</th>
+                    <th @onclick="() => SortByColumn(nameof(Transactions.Amount))">Amount</th>
+                    <th @onclick="() => SortByColumn(nameof(Transactions.Tags))">Tags</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in FilteredTransactions)
+                {
+                    <tr>
+                        <td>@(DateTime.TryParse(transaction.Date, out var parsedDate) ? parsedDate.ToString("MMM dd, yyyy") : "Invalid Date")</td>
+                        <td>@transaction.Title</td>
+                        <td>@transaction.Type</td>
+                        <td>@transaction.Amount</td>
+                        <td>@transaction.Tags</td>
+                        <td>@transaction.Notes</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- AddIncome Modal -->
+    <AddIncome />
+
+    <!-- AddExpense Modal -->
+    <AddExpense />
+</div>
+
+@code {
+    private string SearchTerm { get; set; } = "";
+    private string SelectedType { get; set; } = "";
+    private DateTime? StartDate { get; set; }
+    private DateTime? EndDate { get; set; }
+    private string SortColumn { get; set; } = nameof(Transactions.Date);
+    private bool IsAscending { get; set; } = true;
+
+    private List<Transactions> TransactionsModel { get; set; } = new();
+    private List<Transactions> FilteredTransactions => TransactionsModel
+        .Where(t =>
+            (string.IsNullOrEmpty(SearchTerm) ||
+             (t.Title?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+             (t.Tags?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+             (t.Notes?.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) &&
+            (string.IsNullOrEmpty(SelectedType) || t.Type == SelectedType) &&
+            (!StartDate.HasValue || DateTime.TryParse(t.Date, out var startDate) && startDate >= StartDate) &&
+            (!EndDate.HasValue || DateTime.TryParse(t.Date, out var endDate) && endDate <= EndDate))
+        .OrderBy(t => SortColumn switch
+        {
+            nameof(Transactions.Date) => DateTime.TryParse(t.Date, out var date) ? date : DateTime.MinValue,
+            nameof(Transactions.Title) => t.Title,
+            nameof(Transactions.Type) => t.Type,
+            nameof(Transactions.Amount) => t.Amount,
+            _ => null
+        }, IsAscending ? Comparer<object>.Default : Comparer<object>.Create((x, y) => Comparer<object>.Default.Compare(y, x)))
+        .ToList();
+
+    private void SortByColumn(string column)
+    {
+        if (SortColumn == column)
+        {
+            IsAscending = !IsAscending;
+        }
+        else
+        {
+            SortColumn = column;
+            IsAscending = true;
+        }
+    }
+
+    private string ErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchTransactions();
+    }
+
+    private int TotalNumberofTransactions { get; set; } = 0;
+    private int TotalTransactions { get; set; } = 0;
+    private decimal TotalInflows { get; set; } = 0;
+    private decimal TotalDebts { get; set; } = 0;
+    private decimal TotalOutflows { get; set; } = 0;
+
+
+    private async Task FetchTransactions()
+    {
+        try
+        {
+            string userId = StaticValue.UserId;
+            var users = await AuthServices.ReadUsersFromFile();
+
+            var user = users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                ErrorMessage = "User not found.";
+                return;
+            }
+
+            // Fetch the transactions
+            TransactionsModel = user.Transactions;
+
+            TotalInflows = TransactionsModel
+            .Where(t => t.Type.Equals("Income", StringComparison.OrdinalIgnoreCase))
+            .Sum(t => t.Amount);
+
+            TotalDebts = TransactionsModel
+                .Where(t => t.Type.Equals("Debt", StringComparison.OrdinalIgnoreCase))
+                .Sum(t => t.Amount);
+
+            TotalOutflows = TransactionsModel
+                .Where(t => t.Type.Equals("Expense", StringComparison.OrdinalIgnoreCase))
+                .Sum(t => t.Amount);
+
+            // Calculate total transactions
+            TotalNumberofTransactions = (int)(TotalInflows + TotalDebts - TotalOutflows);
+
+
+            // Calculate the total number of transactions
+            TotalTransactions = TransactionsModel?.Count ?? 0;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error fetching transactions: {ex.Message}";
+        }
+    }
+
+
+    
+}

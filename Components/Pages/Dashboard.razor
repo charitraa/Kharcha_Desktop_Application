@@ -1,156 +1,323 @@
 ﻿ @page "/dashboard" 
+ @using Expenses_tracker.Services
+ @using Expenses_tracker.Models
+ @using Newtonsoft.Json
 
- <div class="dashboard-container"> 
-     <!-- financial overview section --> 
-     <section class="mb-4"> 
-         <h2 class="mb-4">financial overview</h2> 
-         <div class="row g-4"> 
-             <div class="col-md-3"> 
-                 <div class="overview-card"> 
-                     <div class="d-flex justify-content-between mb-2"> 
-                         <span class="text-muted">total balance</span> 
-                         <i class="bi bi-wallet2"></i> 
-                     </div> 
-                     <h3 class="mb-0">$24,500.00</h3> 
-                 </div> 
-             </div> 
-             <div class="col-md-3"> 
-                 <div class="overview-card"> 
-                     <div class="d-flex justify-content-between mb-2"> 
-                         <span class="text-muted">income</span> 
-                         <i class="bi bi-star"></i> 
-                     </div> 
-                     <h3 class="mb-0">$8,800.00</h3> 
-                     <small class="text-muted">month to date</small> 
-                 </div> 
-             </div> 
-             <div class="col-md-3"> 
-                 <div class="overview-card"> 
-                     <div class="d-flex justify-content-between mb-2"> 
-                         <span class="text-muted">expenses</span> 
-                         <i class="bi bi-graph-down"></i> 
-                     </div> 
-                     <h3 class="mb-0">$4,200.00</h3> 
-                     <small class="text-muted">month to date</small> 
-                 </div> 
-             </div> 
-             <div class="col-md-3"> 
-                 <div class="overview-card"> 
-                     <div class="d-flex justify-content-between mb-2"> 
-                         <span class="text-muted">total debt</span> 
-                         <i class="bi bi-credit-card"></i> 
-                     </div> 
-                     <h3 class="mb-0">$12,000.00</h3> 
-                     <small class="text-muted">3 pending payments</small> 
-                 </div> 
-             </div> 
-         </div> 
-     </section> 
+<div class="dashboard-container"> 
+    <!-- financial overview section --> 
+    <section class="mb-4"> 
+        <h2 class="mb-4">financial overview</h2> 
+        <div class="row g-4"> 
+            <div class="col-md-3"> 
+                <div class="overview-card"> 
+                    <div class="d-flex justify-content-between mb-2"> 
+                        <span class="text-muted">Total Balance</span> 
+                        <i class="bi bi-wallet2"></i> 
+                    </div> 
+                    <h3 class="mb-0">$@TotalBalance</h3>
+                </div> 
+            </div> 
+            <div class="col-md-3"> 
+                <div class="overview-card"> 
+                    <div class="d-flex justify-content-between mb-2"> 
+                        <span class="text-muted">Total Income</span> 
+                        <i class="bi bi-star"></i> 
+                    </div> 
+                    <h3 class="mb-0">$@income</h3> 
+                    <small class="text-muted">month to date</small> 
+                </div> 
+            </div> 
+            <div class="col-md-3"> 
+                <div class="overview-card"> 
+                    <div class="d-flex justify-content-between mb-2"> 
+                        <span class="text-muted">Total Expenses</span> 
+                        <i class="bi bi-graph-down"></i> 
+                    </div> 
+                    <h3 class="mb-0">$@Expense</h3> 
+                    <small class="text-muted">month to date</small> 
+                </div> 
+            </div> 
+            <div class="col-md-3"> 
+                <div class="overview-card"> 
+                    <div class="d-flex justify-content-between mb-2"> 
+                        <span class="text-muted">Total Debt</span> 
+                        <i class="bi bi-credit-card"></i> 
+                    </div> 
+                    <h3 class="mb-0">$@Debt</h3> 
+                    <small class="text-muted">3 pending payments</small> 
+                </div> 
+            </div> 
+        </div> 
+    </section> 
 
-     <!-- pending debts section --> 
-     <section class="mb-4"> 
-         <div class="d-flex justify-content-between align-items-center mb-3"> 
-             <h3>pending debts</h3> 
-             <div class="dropdown"> 
-                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
-                     filter 
-                 </button> 
-                 <ul class="dropdown-menu"> 
-                     <li><a class="dropdown-item" href="#">all</a></li> 
-                     <li><a class="dropdown-item" href="#">this month</a></li> 
-                     <li><a class="dropdown-item" href="#">last month</a></li> 
-                 </ul> 
-             </div> 
-         </div> 
-         <div class="table-responsive"> 
-             <table class="table"> 
-                 <tbody> 
-                     <tr> 
-                         <td>utility payment</td> 
-                         <td class="text-muted">due date: jan 15, 2025</td> 
-                         <td class="text-end">$250.00</td> 
-                     </tr> 
-                     <tr> 
-                         <td>utility payment</td> 
-                         <td class="text-muted">due date: jan 15, 2025</td> 
-                         <td class="text-end">$250.00</td> 
-                     </tr> 
-                 </tbody> 
-             </table> 
-         </div> 
-     </section> 
+    <!-- pending debts section --> 
+    <section class="mb-4"> 
+        <div class="d-flex justify-content-between align-items-center mb-3"> 
+            <h3>Pending Debts</h3> 
+            <div class="dropdown"> 
+                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
+                    filter 
+                </button> 
+                <ul class="dropdown-menu"> 
+                    <li><a class="dropdown-item" href="#">all</a></li> 
+                    <li><a class="dropdown-item" href="#">this month</a></li> 
+                    <li><a class="dropdown-item" href="#">last month</a></li> 
+                </ul> 
+            </div> 
+        </div> 
 
-     <!-- recent transactions section --> 
-     <section> 
-         <div class="d-flex justify-content-between align-items-center mb-3"> 
-             <h3>recent transactions</h3> 
-             <div class="d-flex gap-3"> 
-                 <input type="search" class="form-control" placeholder="search..."> 
-                 <div class="dropdown"> 
-                     <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
-                         filter 
-                     </button> 
-                     <ul class="dropdown-menu"> 
-                         <li><a class="dropdown-item" href="#">all</a></li> 
-                         <li><a class="dropdown-item" href="#">income</a></li> 
-                         <li><a class="dropdown-item" href="#">expense</a></li> 
-                     </ul> 
-                 </div> 
-             </div> 
-         </div> 
-         <div class="table-responsive"> 
-             <table class="table"> 
-                 <tbody> 
-                     <tr> 
-                         <td> 
-                             <div class="d-flex align-items-center gap-2"> 
-                                 <div class="transaction-icon"> 
-                                     <i class="bi bi-cart"></i> 
-                                 </div> 
-                                 online shopping 
-                             </div> 
-                         </td> 
-                         <td class="text-muted">jan 15, 2025</td> 
-                         <td class="text-end">$250.00</td> 
-                     </tr> 
-                     <tr> 
-                         <td> 
-                             <div class="d-flex align-items-center gap-2"> 
-                                 <div class="transaction-icon bg-success"> 
-                                     <i class="bi bi-wallet2"></i> 
-                                 </div> 
-                                 salary deposit 
-                             </div> 
-                         </td> 
-                         <td class="text-muted">jan 15, 2025</td> 
-                         <td class="text-end text-success">$250.00</td> 
-                     </tr> 
-                     <tr> 
-                         <td> 
-                             <div class="d-flex align-items-center gap-2"> 
-                                 <div class="transaction-icon"> 
-                                     <i class="bi bi-cart"></i> 
-                                 </div> 
-                                 online shopping 
-                             </div> 
-                         </td> 
-                         <td class="text-muted">jan 15, 2025</td> 
-                         <td class="text-end">$250.00</td> 
-                     </tr> 
-                 </tbody> 
-             </table> 
-         </div> 
-     </section> 
- </div> 
 
- @* @code {  *@
- @*     // add properties and methods for data binding and events  *@
- @*     protected override async task oninitializedasync()  *@
- @*     {  *@
- @*         // todo: load user's financial data  *@
- @*         await base.oninitializedasync();  *@
- @*     }  *@
- @* }  *@
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Notes</th>
+                        <th class="text-muted">Due Date</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Debts != null && Debts.Any())
+                    {
+                        foreach (var debt in Debts)
+                        {
+                            <tr>
+                                <td>@debt.Notes</td>
+                                <td class="text-muted">@debt.DueDate</td>
+                                <td class="text-end">$@debt.Amount</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">No unpaid debts found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </section> 
+
+    <!-- recent transactions section --> 
+    <section> 
+        <div class="d-flex justify-content-between align-items-center mb-3"> 
+            <h3>Recent Transactions</h3> 
+            <div class="d-flex gap-3"> 
+                <input type="search" class="form-control" placeholder="search..."> 
+                <div class="dropdown"> 
+                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"> 
+                        filter 
+                    </button> 
+                    <ul class="dropdown-menu"> 
+                        <li><a class="dropdown-item" href="#">all</a></li> 
+                        <li><a class="dropdown-item" href="#">income</a></li> 
+                        <li><a class="dropdown-item" href="#">expense</a></li> 
+                    </ul> 
+                </div> 
+            </div> 
+        </div> 
+
+
+        <div class="table-responsive">
+            <table class="table">
+                <tbody>
+                    @if (TransactionsData != null && TransactionsData.Any())
+                    {
+                        foreach (var transaction in TransactionsData)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="transaction-icon @(transaction.Type == "Income" ? "bg-success" : "bg-danger")">
+                                            <i class="bi @(transaction.Type == "Income" ? "bi-wallet2" : "bi-cart")"></i>
+                                        </div>
+                                        @transaction.Title
+                                    </div>
+                                </td>
+                                <td class="text-muted">@transaction.Date</td>
+                                <td class="text-end @(transaction.Type == "Income" ? "text-success" : "text-danger")">
+                                    $@transaction.Amount
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">No transactions available.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </section> 
+</div> 
+
+@code {
+    private decimal income = 0;
+    private decimal Expense = 0;
+    private decimal Debt = 0;
+    private decimal TotalBalance = 0;
+
+    public string FilePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Expenses-tracker\\Database\\users.json";
+
+    protected override async Task OnInitializedAsync()
+    {
+        income = await FetchTotalIncome();
+        Expense = await FetchTotalExpense();
+        Debt = await FetchTotalDebt();
+        TotalBalance = await FetchTotalBalance();
+        StaticValue.TotalBalance = TotalBalance;
+        await FetchUnPaidDebt(FilePath);
+        await FetchLimitedTransactions(FilePath);
+
+    }
+    public async Task<decimal> FetchTotalIncome()
+    {
+        if (!File.Exists(FilePath))
+        {
+            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+        }
+
+        string jsonData = await File.ReadAllTextAsync(FilePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        // Find the specific user by UserId
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user == null)
+        {
+            return 0; // Return 0 if the user is not found
+        }
+
+        // Calculate total income for the specific user
+        return user.Transactions
+                   .Where(transaction => transaction.Type.Equals("Income", StringComparison.OrdinalIgnoreCase))
+                   .Sum(transaction => transaction.Amount);
+    }
+
+    public async Task<decimal> FetchTotalExpense()
+    {
+        if (!File.Exists(FilePath))
+        {
+            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+        }
+
+        string jsonData = await File.ReadAllTextAsync(FilePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user == null)
+        {
+            return 0;
+        }
+
+        return user.Transactions
+                   .Where(transaction => transaction.Type.Equals("Expense", StringComparison.OrdinalIgnoreCase))
+                   .Sum(transaction => transaction.Amount);
+    }
+
+    public async Task<decimal> FetchTotalDebt()
+    {
+        if (!File.Exists(FilePath))
+        {
+            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+        }
+
+        string jsonData = await File.ReadAllTextAsync(FilePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user == null)
+        {
+            return 0;
+        }
+
+        return user.Debts.Sum(debt => debt.Amount);
+    }
+
+    public async Task<decimal> FetchTotalBalance()
+    {
+        if (!File.Exists(FilePath))
+        {
+            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+        }
+
+        string jsonData = await File.ReadAllTextAsync(FilePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user == null)
+        {
+            return 0;
+        }
+        StaticValue.TotalBalance = user.TotalBalance;
+
+        return user.TotalBalance;
+    }
+
+
+    public static List<DebtModels> Debts { get; private set; } = new();
+
+
+    public static async Task FetchUnPaidDebt(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine("File not found.");
+            return;
+        }
+
+        string jsonData = await File.ReadAllTextAsync(filePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user != null)
+        {
+            Debts = user.Debts.Where(debt => !debt.IsPaid).ToList();
+        }
+        else
+        {
+            Debts = new List<DebtModels>();
+        }
+    }
+
+    public static List<Transactions> TransactionsData { get; private set; } = new();
+
+    public static async Task FetchLimitedTransactions(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine("File not found.");
+            return;
+        }
+
+        string jsonData = await File.ReadAllTextAsync(filePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+
+        var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user != null)
+        {
+            TransactionsData = user.Transactions
+                                  .OrderByDescending(t => t.Date) // Sort by Date
+                                  .Take(4)
+                                  .ToList();
+        }
+        else
+        {
+            TransactionsData = new List<Transactions>();
+        }
+    }
+
+} 
 
  <style> 
      .dashboard-container { 

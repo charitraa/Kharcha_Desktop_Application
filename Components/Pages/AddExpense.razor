@@ -1,0 +1,116 @@
+﻿@using Expenses_tracker.Models
+@using Expenses_tracker.Services
+@inject Expenses_tracker.Services.AuthServices Transactions
+@inject NavigationManager NavigationManager
+
+<div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addExpenseLabel">Record New Expense</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(Message))
+                {
+                    <div class="alert alert-info mb-3" role="alert">
+                        @Message
+                    </div>
+                }
+                <form @onsubmit="HandleSubmit">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" @bind="Title" placeholder="Expense Title" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" @bind="Amount" placeholder="$ 0.00" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <input type="text" class="form-control" id="notes" @bind="Notes" placeholder="Food & Dining" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="tags" class="form-label">Tags</label>
+                        <input type="text" class="form-control" id="tags" @bind="Tags" placeholder="Add tags (comma separated)" />
+                    </div>
+                    @if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        <div class="alert-danger alert-info mb-3" role="alert">
+                            @ErrorMessage
+                        </div>
+                    }
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark">Save Expense</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Title;
+    private decimal Amount;
+    private string Notes;
+    private string Tags;
+    private string Message; 
+    private string ErrorMessage;
+
+    public Func<string, string, decimal, string, string, bool, Task<bool>> Transaction;
+
+    protected override void OnInitialized()
+    {
+        Transaction = Transactions.AddTransaction;
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // Reset messages
+            Message = null;
+            ErrorMessage = null;
+
+            // Validate input fields
+            if (string.IsNullOrEmpty(Title) || Amount <= 0)
+            {
+                ErrorMessage = "Please fill out all required fields correctly.";
+                return;
+            }
+
+            if (StaticValue.TotalBalance <= 0 && StaticValue.TotalBalance<Amount)
+            {
+                ErrorMessage = $"Insufficient Income or Balance. Current Balance: {StaticValue.TotalBalance}";
+                return;
+            }
+
+
+            // Add transaction
+            var result = await Task.Run(() =>
+                Transaction(StaticValue.UserId, Title, Amount, Notes, Tags, false)
+            );
+            
+            // Reset fields after success
+            Title = string.Empty;
+            Amount = 0;
+            Notes = string.Empty;
+            Tags = string.Empty;
+
+            // Display success message
+            Message = "Transaction successfully added!";
+
+            NavigationManager.NavigateTo("/transactions");
+
+            
+        }
+        catch (Exception ex)
+        {
+            // Handle and display the error message
+            ErrorMessage = $"Error: {ex.Message}";
+            
+        }
+    }
+}
+

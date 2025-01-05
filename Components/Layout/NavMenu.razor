@@ -1,4 +1,6 @@
 ﻿@* Shared/NavMenu.razor *@
+@using Microsoft.AspNetCore.Components
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Expenses Tracker</a>
@@ -26,29 +28,11 @@
                 </li>
             </ul>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-dark" type="button">+ Add Income</button>
-                <button class="btn btn-dark" type="button">+ Add Expense</button>
+                <a href="/">
+                    <button class="btn btn-outline-dark" type="button">Logout</button> 
+                </a>
             </div>
         </div>
     </div>
 </nav>
 
-<style>
-    .nav-link.active {
-        color: #1f2937 !important;
-        border-bottom: 2px solid #1f2937;
-    }
-
-    .nav-link {
-        padding-bottom: 0.5rem;
-        margin: 0 0.5rem;
-    }
-
-    .navbar {
-        padding: 1rem 2rem;
-    }
-
-    .bi {
-        margin-right: 0.5rem;
-    }
-</style>

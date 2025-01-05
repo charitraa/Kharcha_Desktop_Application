@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Expenses_tracker.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Expenses_tracker.Services
 {
-    internal class StaticValue
+    public class StaticValue
     {
-        static public String userid;
-        static public String username;
+        public static string UserId;
+        public static decimal TotalBalance;
+
+
 
     }
 }

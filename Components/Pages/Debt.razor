@@ -1,0 +1,269 @@
+﻿@page "/debt"
+@using Expenses_tracker.Services
+@using Expenses_tracker.Models
+@inject Expenses_tracker.Services.AuthServices Transactions
+
+<div class="container mt-4">
+    <!-- Record Debt Form Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="mb-4">Record Debt</h4>
+            @if (!string.IsNullOrEmpty(Message))
+            {
+                <div class="alert alert-info mb-3" role="alert">
+                    @Message
+                </div>
+            }
+            <div class="row g-3">
+                <!-- Amount -->
+                <div class="col-md-6">
+                    <label class="form-label">Amount</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number"
+                        class="form-control"
+                        placeholder="0.00"
+                        step="0.01"
+                        @bind="Amount" />
+                    </div>
+                </div>
+
+                <!-- Due Date -->
+                <div class="col-md-6">
+                    <label class="form-label">Due date</label>
+                    <input type="date"
+                    class="form-control"
+                    @bind="DueDate" />
+                </div>
+
+                <!-- Notes -->
+                <div class="col-md-6">
+                    <label class="form-label">Notes</label>
+                    <input type="text"
+                    class="form-control"
+                    placeholder="Food & Dining"
+                    @bind="Notes" />
+                </div>
+
+                <!-- Source of debt -->
+                <div class="col-md-6">
+                    <label class="form-label">Source of debt</label>
+                    <input type="text"
+                    class="form-control"
+                    @bind="SourceOfDebt" />
+                </div>
+
+                <!-- Tags -->
+                <div class="col-12">
+                    <label class="form-label">Tags</label>
+                    <input type="text"
+                    class="form-control"
+                    placeholder="Add tags (comma separated)"
+                    @bind="Tags" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-info mb-3" role="alert">
+                        @ErrorMessage
+                    </div>
+                }
+                <div class="col-12">
+                    <button class="btn btn-dark w-100" @onclick="HandleSubmit">
+                        Add Debt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debts Table -->
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Source of Debt</th>
+                    <th>Notes</th>
+                    <th>Tags</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (DebtModel == null || !DebtModel.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">No debts found.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var debt in DebtModel)
+                    {
+                        <tr>
+                            <td>@debt.Source</td>
+                            <td>@debt.Notes</td>
+                            <td>@debt.Tags</td>
+                            <td>@debt.Amount.ToString("F2")</td>
+                            <td>@debt.DueDate</td>
+                            <td>@(debt.IsPaid ? "Paid" : "Unpaid")</td>
+                            <td></td>
+                            @if (!debt.IsPaid)
+                            {
+                                <button class="btn btn-primary" @onclick="() => TogglePaymentStatus(debt.Id)">
+                                    Mark as Paid
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary" disabled>
+                                    Paid
+                                </button>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private decimal Amount;
+    private DateOnly DueDate;
+    private string Notes;
+    private string SourceOfDebt;
+    private string Tags;
+    private bool IsPaid;
+    private string Message;
+    private string ErrorMessage;
+
+    public Func<string, decimal, string, string, string, DateOnly, bool, Task<bool>> Debts;
+
+    protected override void OnInitialized()
+    {
+        Debts = Transactions.AddDebt;
+    }
+
+    
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // Reset messages
+            Message = null;
+            ErrorMessage = null;
+
+            // Validate input fields
+            if (string.IsNullOrEmpty(Notes) || Amount <= 0)
+            {
+                ErrorMessage = "Please fill out all required fields correctly.";
+                return;
+            }
+
+            // Add transaction
+            var result = await Task.Run(() =>
+                Debts(StaticValue.UserId,Amount, Notes, SourceOfDebt,Tags,DueDate, false)
+            );
+            Amount = 0;
+            Notes = string.Empty;
+            Tags = string.Empty;
+
+            // Display success message
+            Message = "Debt added has been successfully added!";
+
+
+
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error: {ex.Message}";
+        }
+    }
+
+
+    private List<DebtModels> DebtModel = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchDebts();
+    }
+
+    private async Task FetchDebts()
+    {
+        try
+        {
+            // Replace with your user ID
+            string userId = StaticValue.UserId;
+            var users = await AuthServices.ReadUsersFromFile();
+
+            var user = users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                ErrorMessage = "User not found.";
+                return;
+            }
+
+            // Assign user's debts to the list
+            DebtModel = user.Debts;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error fetching debts: {ex.Message}";
+        }
+    }
+    private async Task TogglePaymentStatus(string debtId)
+    {
+        try
+        {
+            // Find the debt by ID
+            var debt = DebtModel.FirstOrDefault(d => d.Id == debtId);
+            if (debt == null)
+            {
+                ErrorMessage = "Debt not found.";
+                return;
+            }
+
+            // Update the payment status
+            debt.IsPaid = true;
+
+            // Optionally update the data source (e.g., file, database)
+            await Transactions.UpdateUserDebt(StaticValue.UserId, debt);
+
+
+            // Refresh the debts list
+            await FetchDebts();
+
+            Message = "Payment status updated successfully.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error updating payment status: {ex.Message}";
+        }
+    }
+
+
+}
+
+<style>
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #ced4da;
+    }
+
+    .btn-dark {
+        background-color: #0f172a;
+    }
+
+    .btn-dark:hover {
+        background-color: #1e293b;
+    }
+
+    .badge {
+        font-weight: normal;
+    }
+</style>
