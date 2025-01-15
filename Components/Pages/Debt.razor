@@ -64,7 +64,7 @@
 
                 @if (!string.IsNullOrEmpty(ErrorMessage))
                 {
-                    <div class="alert alert-info mb-3" role="alert">
+                    <div class="alert-danger alert-info mb-3" role="alert">
                         @ErrorMessage
                     </div>
                 }
@@ -146,7 +146,7 @@
         Debts = Transactions.AddDebt;
     }
 
-    
+
 
     private async Task HandleSubmit()
     {
@@ -167,6 +167,7 @@
             var result = await Task.Run(() =>
                 Debts(StaticValue.UserId,Amount, Notes, SourceOfDebt,Tags,DueDate, false)
             );
+            await FetchDebts();
             Amount = 0;
             Notes = string.Empty;
             Tags = string.Empty;
@@ -232,13 +233,21 @@
             debt.IsPaid = true;
 
             // Optionally update the data source (e.g., file, database)
-            await Transactions.UpdateUserDebt(StaticValue.UserId, debt);
+            bool result =  await Transactions.UpdateUserDebt(StaticValue.UserId, debt);
+
+            if (result)
+            {
+                Message = "Payment status updated successfully.";
+            }
+            else
+            {
+                ErrorMessage = $"Insufficient Income or Balance. Current Balance: {StaticValue.TotalBalance}";
+            }
 
 
             // Refresh the debts list
             await FetchDebts();
-
-            Message = "Payment status updated successfully.";
+            
         }
         catch (Exception ex)
         {

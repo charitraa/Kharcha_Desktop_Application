@@ -24,7 +24,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="amount" class="form-label">Amount</label>
-                        <input type="number" class="form-control" id="amount" @bind="Amount" placeholder="$ 0.00" />
+                        <input type="number" class="form-control" id="amount" @bind="Amount" placeholder=" 0.00" />
                     </div>
 
                     <div class="mb-3">
@@ -57,12 +57,18 @@
     private string Tags;
     private string Message; 
     private string ErrorMessage;
+    private string Symbol;
 
     public Func<string, string, decimal, string, string, bool, Task<bool>> Transaction;
 
     protected override void OnInitialized()
     {
         Transaction = Transactions.AddTransaction;
+    }
+    private void ReloadPage()
+    {
+        //  reload the page
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     private async Task HandleSubmit()
@@ -80,7 +86,7 @@
                 return;
             }
 
-            if (StaticValue.TotalBalance <= 0 && StaticValue.TotalBalance<Amount)
+            if (StaticValue.TotalBalance <= 0 || StaticValue.TotalBalance<Amount)
             {
                 ErrorMessage = $"Insufficient Income or Balance. Current Balance: {StaticValue.TotalBalance}";
                 return;
@@ -91,7 +97,7 @@
             var result = await Task.Run(() =>
                 Transaction(StaticValue.UserId, Title, Amount, Notes, Tags, false)
             );
-            
+
             // Reset fields after success
             Title = string.Empty;
             Amount = 0;
@@ -101,7 +107,7 @@
             // Display success message
             Message = "Transaction successfully added!";
 
-            NavigationManager.NavigateTo("/transactions");
+            ReloadPage();
 
             
         }

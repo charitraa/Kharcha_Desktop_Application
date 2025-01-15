@@ -40,7 +40,7 @@
                             @ErrorMessage
                         </div>
                     }
-                    
+
                     <div class="d-grid">
                         <button type="submit" class="btn btn-dark">Save Income</button>
                     </div>
@@ -66,6 +66,12 @@
     protected override void OnInitialized()
     {
         Transaction = Transactions.AddTransaction;
+    }
+
+    private void ReloadPage()
+    {
+        // Navigate to the current URL to reload the page
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     private async Task HandleSubmit()
@@ -94,11 +100,10 @@
             Notes = string.Empty;
             Tags = string.Empty;
 
-            // Display success message
             Message = "Transaction successfully added!";
 
-            NavigationManager.NavigateTo("/transactions");
-            // Optionally, close the modal
+            ReloadPage();
+
             
         }
         catch (Exception ex)

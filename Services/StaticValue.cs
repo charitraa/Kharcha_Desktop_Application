@@ -11,8 +11,7 @@ namespace Expenses_tracker.Services
     {
         public static string UserId;
         public static decimal TotalBalance;
-
-
-
+        public static string CurrencyType;
+        public static string CurrencySymbol;
     }
 }

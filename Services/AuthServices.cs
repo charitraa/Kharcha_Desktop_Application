@@ -15,7 +15,7 @@ namespace Expenses_tracker.Services
 {
     public class AuthServices
     {
-        public const string FilePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Expenses-tracker\\Database\\users.json";
+        public const string FilePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Kharcha_Desktop_Application\\Database\\users.json";
         //public const string FilePath = "C:\\Users\\CHME\\Desktop\\Expenses tracker\\Database\\users.json";
 
         // Load users from JSON file
@@ -99,7 +99,7 @@ namespace Expenses_tracker.Services
                 return false; // User not found
             }
             StaticValue.UserId = user.Id;
-            //StaticValue.TotalBalance = user.TotalBalance;
+            CurrencyHelper.SetCurrencySymbol(user.type);
 
             // Validate password
             return ValidatePassword(password, user.Password);
@@ -128,6 +128,7 @@ namespace Expenses_tracker.Services
             user.Transactions.Add(transaction);
 
             user.TotalBalance += isIncome ? amount : -amount;
+            StaticValue.TotalBalance = user.TotalBalance;
 
             await WriteUsersToFile(users);
 
@@ -176,10 +177,11 @@ namespace Expenses_tracker.Services
             var json = await File.ReadAllTextAsync(FilePath);
             return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
         }
-        public async Task UpdateUserDebt(string userId, DebtModels updatedDebt)
+        public async Task<bool> UpdateUserDebt(string userId, DebtModels updatedDebt)
         {
             var users = await ReadUsersFromFile();
             var user = users.FirstOrDefault(u => u.Id == userId);
+            String ErrorMessage;
 
             if (user != null)
             {
@@ -188,8 +190,18 @@ namespace Expenses_tracker.Services
                 {
                     if (!debt.IsPaid && updatedDebt.IsPaid)
                     {
-                        // Deduct the debt amount from the user's total balance
-                        user.TotalBalance -= debt.Amount;
+                        if (StaticValue.TotalBalance <= 0 || StaticValue.TotalBalance < updatedDebt.Amount)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+
+                            // Deduct the debt amount from the user's total balance
+                            user.TotalBalance -= debt.Amount;
+                            StaticValue.TotalBalance = user.TotalBalance;
+                        }
+                        
                     }
 
                     // Update the debt
@@ -199,6 +211,7 @@ namespace Expenses_tracker.Services
                     await WriteUsersToFile(users);
                 }
             }
+            return true;
         }
 
 

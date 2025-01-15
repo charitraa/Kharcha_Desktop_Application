@@ -58,12 +58,12 @@
                             </span>
                             <select class="form-select" id="currencyType" @bind="CurrencyType">
                                 <option value="">Select currency type</option>
-                                <option value="USD">USD - US Dollar</option>
-                                <option value="NRP">NRP - Nepali Rupees</option>
-                                <option value="EUR">EUR - Euro</option>
-                                <option value="GBP">GBP - British Pound</option>
-                                <option value="JPY">JPY - Japanese Yen</option>
-                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="USD">USD - US Dollar ($)</option>
+                                <option value="NRP">NRP - Nepali Rupees (Rs)</option>
+                                <option value="EUR">EUR - Euro (€)</option>
+                                <option value="GBP">GBP - British Pound (£)</option>
+                                <option value="JPY">JPY - Japanese Yen (¥)</option>
+                                <option value="INR">INR - Indian Rupee (₹)</option>
                             </select>
                         </div>
                         @if (HasAttemptedSubmit && string.IsNullOrEmpty(CurrencyType))

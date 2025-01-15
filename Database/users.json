@@ -4,7 +4,7 @@
     "Username": "charitra shrestha",
     "Password": "KA\u002BZetmoMqgx0XHh6oWLl5z9xNmIMAy6QzaRYoLD\u002BEc=",
     "type": "NRP",
-    "TotalBalance": 48990,
+    "TotalBalance": 99540,
     "Transactions": [
       {
         "Id": "0398fc57-e548-4598-bf02-105c0435db86",
@@ -79,13 +79,40 @@
         "Type": "Income"
       },
       {
-        "Id": "ee94a2ae-67f1-4fab-b918-0f55b468e798",
-        "Title": "Pathau",
-        "Notes": "online service",
-        "Tags": "indrive",
-        "Amount": 200,
-        "Date": "2025-01-05",
+        "Id": "cf7a99a8-16c7-4aa2-ad14-db1bc4eaf3a6",
+        "Title": "salary",
+        "Notes": "Salary",
+        "Tags": "Salary",
+        "Amount": 1000,
+        "Date": "2025-01-15",
+        "Type": "Income"
+      },
+      {
+        "Id": "7c6e231c-48af-48a0-97c8-bb441beb1a27",
+        "Title": "Esewa",
+        "Notes": "food",
+        "Tags": "food",
+        "Amount": 500,
+        "Date": "2025-01-15",
         "Type": "Expense"
+      },
+      {
+        "Id": "674dd529-2ccd-41f7-b823-67bd8e07a145",
+        "Title": "Esewa",
+        "Notes": "gg",
+        "Tags": "gg",
+        "Amount": 50000,
+        "Date": "2025-01-16",
+        "Type": "Expense"
+      },
+      {
+        "Id": "8515d9d2-e38c-4963-b743-d4b939d44314",
+        "Title": "salary",
+        "Notes": "Salary",
+        "Tags": "Salary",
+        "Amount": 100000,
+        "Date": "2025-01-16",
+        "Type": "Income"
       }
     ],
     "Debts": [
@@ -96,7 +123,7 @@
         "Amount": 150,
         "Source": "Toilet",
         "DueDate": "0001-01-18",
-        "IsPaid": false
+        "IsPaid": true
       },
       {
         "Id": "576fe301-d732-4aa4-ad9e-ffcde6015425",
@@ -106,6 +133,24 @@
         "Source": "jesish",
         "DueDate": "2025-01-01",
         "IsPaid": true
+      },
+      {
+        "Id": "d46b659a-de8d-4965-9718-b3a2a424508d",
+        "Notes": "Food",
+        "Tags": "Food",
+        "Amount": 500,
+        "Source": "Bank",
+        "DueDate": "2025-01-02",
+        "IsPaid": false
+      },
+      {
+        "Id": "fa0f5ff7-3fbb-4749-bb1b-52d3b8e01140",
+        "Notes": "d3rr",
+        "Tags": "rrr",
+        "Amount": 100000,
+        "Source": null,
+        "DueDate": "0001-01-01",
+        "IsPaid": false
       }
     ]
   },
@@ -123,19 +168,9 @@
     "Username": "Ravi Shrestha",
     "Password": "in0O6DgVR2JFqm7Ccsg1NtfXCCA1YEkuSqcirQ4ix5c=",
     "type": "NRP",
-    "TotalBalance": -500,
+    "TotalBalance": 0,
     "Transactions": [],
-    "Debts": [
-      {
-        "Id": "bca80e57-65d1-4462-a000-685980040e38",
-        "Notes": "New Years",
-        "Tags": "New Years",
-        "Amount": 500,
-        "Source": "Friends",
-        "DueDate": "2025-01-01",
-        "IsPaid": true
-      }
-    ]
+    "Debts": []
   },
   {
     "Id": "313302ba-5a94-40c7-bb52-10ed6e8634e1",
