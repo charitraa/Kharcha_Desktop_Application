@@ -4,7 +4,7 @@
     "Username": "charitra shrestha",
     "Password": "KA\u002BZetmoMqgx0XHh6oWLl5z9xNmIMAy6QzaRYoLD\u002BEc=",
     "type": "NRP",
-    "TotalBalance": 99540,
+    "TotalBalance": 99040,
     "Transactions": [
       {
         "Id": "0398fc57-e548-4598-bf02-105c0435db86",
@@ -141,7 +141,7 @@
         "Amount": 500,
         "Source": "Bank",
         "DueDate": "2025-01-02",
-        "IsPaid": false
+        "IsPaid": true
       },
       {
         "Id": "fa0f5ff7-3fbb-4749-bb1b-52d3b8e01140",
@@ -177,6 +177,15 @@
     "Username": "doraemon",
     "Password": "WZRHGrsBESr8wYFZ9sx0tPURuZgG2lmzyvWpwXPKz8U=",
     "type": "NRP",
+    "TotalBalance": 0,
+    "Transactions": [],
+    "Debts": []
+  },
+  {
+    "Id": "c8633682-383d-492f-b7e2-bba210575afb",
+    "Username": "sakshi",
+    "Password": "VuXZfLrND5bCaV5KlZx2lJHJs7R7/AbNhvjaP1M2maE=",
+    "type": "USD",
     "TotalBalance": 0,
     "Transactions": [],
     "Debts": []

@@ -1,6 +1,14 @@
 ﻿@page "/transactions"
 @using Expenses_tracker.Services
 @using Expenses_tracker.Models
+@inject IJSRuntime JSRuntime
+@using System;
+@using System.Text
+@using System.Linq
+@using System.Collections.Generic
+@using Microsoft.JSInterop
+
+
 
 <div class="container mt-4">
     <!-- Add Income and Expense Buttons -->
@@ -9,7 +17,8 @@
         <div class="col-12">
             <div class="d-flex justify-content-end mb-4">
                 <button class="btn btn-outline-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#addIncomeModal">+ Add Income</button>
-                <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-bs-target="#addExpenseModal">+ Add Expense</button>
+                <button class="btn btn-dark me-2" type="button" data-bs-toggle="modal" data-bs-target="#addExpenseModal">+ Add Expense</button>
+                <button class="btn btn-success " type="button" @onclick="ExportToCsv">Export to CSV</button>
             </div>
         </div>
 
@@ -17,7 +26,7 @@
         <div class="row-cols-4 pt-4">
             <div class="overview-card">
                 <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Total No of Transactions</span>
+                    <span class="text-muted">Total Transactions</span>
                     <i class="bi bi-wallet2"></i>
                 </div>
                 <h3 class="mb-0">@TotalNumberofTransactions</h3>
@@ -101,6 +110,7 @@
     private bool IsAscending { get; set; } = true;
 
     private List<Transactions> TransactionsModel { get; set; } = new();
+
     private List<Transactions> FilteredTransactions => TransactionsModel
         .Where(t =>
             (string.IsNullOrEmpty(SearchTerm) ||
@@ -189,6 +199,32 @@
             ErrorMessage = $"Error fetching transactions: {ex.Message}";
         }
     }
+    private async Task ExportToCsv()
+    {
+        try
+        {
+            var csvContent = new StringBuilder();
+            csvContent.AppendLine("Date,Title,Type,Amount,Tags,Notes");
+
+            foreach (var transaction in TransactionsModel)
+            {
+
+                csvContent.AppendLine($"\"{transaction.Date}\",\"{transaction.Title}\",\"{transaction.Type}\",\"{transaction.Amount}\",\"{transaction.Tags}\",\"{transaction.Notes}\"");
+            }
+
+            // Convert to byte array
+            var fileBytes = Encoding.UTF8.GetBytes(csvContent.ToString());
+            var base64 = Convert.ToBase64String(fileBytes);
+
+            // Trigger file download
+            await JSRuntime.InvokeVoidAsync("downloadFile", "transactions.csv", base64);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error exporting to CSV: {ex.Message}";
+        }
+    }
+
 
 
     
