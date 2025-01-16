@@ -31,7 +31,8 @@
                     <label for="endDate">End Date:</label>
                     <InputDate id="endDate" @bind-Value="EndDate" class="form-control" />
                 </div>
-                <button class="btn btn-primary" >Apply Filter</button>
+                <button class="btn btn-primary" @onclick="async () => await ApplyFilter()">Apply Filter</button>
+
             }
         </div>
         <div class="row g-4"> 
@@ -51,7 +52,7 @@
                         <i class="bi bi-star"></i> 
                     </div> 
                     <h3 class="mb-0">@Symbol @income</h3>
-                    <small class="text-muted">month to date</small> 
+                    
                 </div> 
             </div> 
             <div class="col-md-3"> 
@@ -61,7 +62,7 @@
                         <i class="bi bi-graph-down"></i> 
                     </div> 
                     <h3 class="mb-0">@Symbol @Expense</h3>
-                    <small class="text-muted">month to date</small> 
+                    
                 </div> 
             </div> 
             <div class="col-md-3"> 
@@ -71,7 +72,6 @@
                         <i class="bi bi-credit-card"></i> 
                     </div> 
                     <h3 class="mb-0">@Symbol @Debt</h3>
-                    <small class="text-muted">@No_of_pending_debts pending payments</small> 
                 </div> 
             </div> 
         </div> 
@@ -80,7 +80,7 @@
     <!-- pending debts section --> 
     <section class="mb-4"> 
         <div class="d-flex justify-content-between align-items-center mb-3"> 
-            <h3>Pending Debts</h3> 
+            <h3>Pending Debts (@No_of_pending_debts)</h3>
 
         </div> 
 
@@ -171,10 +171,12 @@
     private decimal Debt = 0;
     private string Symbol = "";
     private decimal TotalBalance = 0;
-
-    public string FilePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Kharcha_Desktop_Application\\Database\\users.json";
-
-
+    private string FilterSelection { get; set; } = "All";
+    private DateOnly StartDate { get; set; }
+    private DateOnly EndDate { get; set; }
+    public static List<DebtModels> Debts { get; private set; } = new();
+    public static int No_of_pending_debts = 0;
+    public static List<Transactions> TransactionsData { get; private set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -184,18 +186,18 @@
         TotalBalance = await FetchTotalBalance();
         StaticValue.TotalBalance = TotalBalance;
         Symbol = StaticValue.CurrencySymbol;
-        await FetchUnPaidDebt(FilePath);
-        await FetchLimitedTransactions(FilePath);
+        await FetchUnPaidDebt(StaticValue.filePath);
+        await FetchLimitedTransactions(StaticValue.filePath);
 
     }
     public async Task<decimal> FetchTotalIncome()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(StaticValue.filePath))
         {
-            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+            throw new FileNotFoundException("The specified JSON file was not found.", StaticValue.filePath);
         }
 
-        string jsonData = await File.ReadAllTextAsync(FilePath);
+        string jsonData = await File.ReadAllTextAsync(StaticValue.filePath);
         var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
 
         // Find the specific user by UserId
@@ -211,19 +213,67 @@
                    .Where(transaction => transaction.Type.Equals("Income", StringComparison.OrdinalIgnoreCase))
                    .Sum(transaction => transaction.Amount);
     }
-    private string FilterSelection { get; set; } = "All";
-    private DateTime? StartDate { get; set; }
-    private DateTime? EndDate { get; set; }
+
     private void SetFilterType(string filterType)
     {
         FilterSelection = filterType;
         if (filterType == "All")
         {
-            StartDate = null;
-            EndDate = null;
             ReloadPage();
         }
     }
+    public string ErrorMessage;
+
+    private async Task ApplyFilter()
+    {
+        if (StartDate == null || EndDate == null)
+        {
+            ErrorMessage = "Please select both start and end dates.";
+            return;
+        }
+
+        // Fetch and filter user data
+        string jsonData = await File.ReadAllTextAsync(StaticValue.filePath);
+        var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
+        var user = users?.FirstOrDefault(u => u.Id == StaticValue.UserId);
+
+        if (user != null)
+        {
+            // Filter transactions
+            TransactionsData = user.Transactions
+             .Where(t => DateOnly.TryParse(t.Date, out var transactionDate) 
+                         && transactionDate >= StartDate             
+                         && transactionDate <= EndDate)             
+             .OrderByDescending(t => DateTime.Parse(t.Date))               
+             .ToList();
+
+            // Recalculate totals
+            income = TransactionsData
+                .Where(t => t.Type.Equals("Income", StringComparison.OrdinalIgnoreCase))
+                .Sum(t => t.Amount);
+
+            Expense = TransactionsData
+                .Where(t => t.Type.Equals("Expense", StringComparison.OrdinalIgnoreCase))
+                .Sum(t => t.Amount);
+
+            TotalBalance = income - Expense;
+
+            // Filter debts
+            Debts = user.Debts
+             .Where(d => d.DueDate >= StartDate && d.DueDate <= EndDate && !d.IsPaid)
+             .ToList();
+
+            No_of_pending_debts = Debts.Count;
+
+            ErrorMessage = string.Empty; // Clear error message if successful
+        }
+        else
+        {
+            ErrorMessage = "User data not found.";
+        }
+    }
+
+
     private void ReloadPage()
     {
         // Navigate to the current URL to reload the page
@@ -232,12 +282,12 @@
 
     public async Task<decimal> FetchTotalExpense()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(StaticValue.filePath))
         {
-            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+            throw new FileNotFoundException("The specified JSON file was not found.", StaticValue.filePath);
         }
 
-        string jsonData = await File.ReadAllTextAsync(FilePath);
+        string jsonData = await File.ReadAllTextAsync(StaticValue.filePath);
         var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
 
         var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
@@ -251,15 +301,15 @@
                    .Where(transaction => transaction.Type.Equals("Expense", StringComparison.OrdinalIgnoreCase))
                    .Sum(transaction => transaction.Amount);
     }
-
+    //functions to get total debts
     public async Task<decimal> FetchTotalDebt()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(StaticValue.filePath))
         {
-            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+            throw new FileNotFoundException("The specified JSON file was not found.", StaticValue.filePath);
         }
 
-        string jsonData = await File.ReadAllTextAsync(FilePath);
+        string jsonData = await File.ReadAllTextAsync(StaticValue.filePath);
         var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
 
         var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
@@ -272,14 +322,15 @@
         return user.Debts.Sum(debt => debt.Amount);
     }
 
+    //functions to get total balance
     public async Task<decimal> FetchTotalBalance()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(StaticValue.filePath))
         {
-            throw new FileNotFoundException("The specified JSON file was not found.", FilePath);
+            throw new FileNotFoundException("The specified JSON file was not found.", StaticValue.filePath);
         }
 
-        string jsonData = await File.ReadAllTextAsync(FilePath);
+        string jsonData = await File.ReadAllTextAsync(StaticValue.filePath);
         var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
 
         var user = users.FirstOrDefault(u => u.Id == StaticValue.UserId);
@@ -292,12 +343,7 @@
         return user.TotalBalance;
     }
 
-
-    public static List<DebtModels> Debts { get; private set; } = new();
-
-    public static int No_of_pending_debts = 0;
-
-
+    //fetch unpaid debts 
     public static async Task FetchUnPaidDebt(string filePath)
     {
         if (!File.Exists(filePath))
@@ -322,8 +368,8 @@
         }
     }
 
-    public static List<Transactions> TransactionsData { get; private set; } = new();
 
+    //fetch the transactions
     public static async Task FetchLimitedTransactions(string filePath)
     {
         if (!File.Exists(filePath))

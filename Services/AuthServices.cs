@@ -1,4 +1,5 @@
 ﻿using Expenses_tracker.Models;
+using Expenses_tracker.Services;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -15,23 +16,20 @@ namespace Expenses_tracker.Services
 {
     public class AuthServices
     {
-        public const string FilePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Kharcha_Desktop_Application\\Database\\users.json";
-        //public const string FilePath = "C:\\Users\\CHME\\Desktop\\Expenses tracker\\Database\\users.json";
-
         // Load users from JSON file
         public List<User> FetchAllUsers()
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(StaticValue.filePath))
                 return new List<User>();
 
-            var json = File.ReadAllText(FilePath);
+            var json = File.ReadAllText(StaticValue.filePath);
             return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
         }
 
         public void SaveUsers(List<User> users)
         {
             var json = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(FilePath, json);
+            File.WriteAllText(StaticValue.filePath, json);
         }
 
         // Hash the password using SHA-256
@@ -165,16 +163,16 @@ namespace Expenses_tracker.Services
         public static async Task WriteUsersToFile(List<User> users)
         {
             var json =JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(FilePath, json);
+            await File.WriteAllTextAsync(StaticValue.filePath, json);
         }
         public static async Task<List<User>> ReadUsersFromFile()
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(StaticValue.filePath))
             {
                 return new List<User>();
             }
 
-            var json = await File.ReadAllTextAsync(FilePath);
+            var json = await File.ReadAllTextAsync(StaticValue.filePath);
             return JsonSerializer.Deserialize<List<User>>(json) ?? new List<User>();
         }
         public async Task<bool> UpdateUserDebt(string userId, DebtModels updatedDebt)
