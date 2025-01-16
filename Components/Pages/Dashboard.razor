@@ -52,7 +52,7 @@
                         <i class="bi bi-star"></i> 
                     </div> 
                     <h3 class="mb-0">@Symbol @income</h3>
-                    
+
                 </div> 
             </div> 
             <div class="col-md-3"> 
@@ -62,7 +62,7 @@
                         <i class="bi bi-graph-down"></i> 
                     </div> 
                     <h3 class="mb-0">@Symbol @Expense</h3>
-                    
+
                 </div> 
             </div> 
             <div class="col-md-3"> 
@@ -121,11 +121,15 @@
     <!-- recent transactions section --> 
     <section> 
         <div class="d-flex justify-content-between align-items-center mb-3"> 
-            <h3>Recent Transactions</h3> 
-            <div class="d-flex gap-3"> 
-                <input type="search" class="form-control" placeholder="search..."> 
-
-            </div> 
+            @if (FilterSelection == "Transaction")
+            {
+                <h3>All Transactions</h3>
+            }
+            else
+            {
+                <h3>Recent Transactions</h3>
+            }
+           
         </div> 
 
 
@@ -258,14 +262,8 @@
 
             TotalBalance = income - Expense;
 
-            // Filter debts
-            Debts = user.Debts
-             .Where(d => d.DueDate >= StartDate && d.DueDate <= EndDate && !d.IsPaid)
-             .ToList();
-
-            No_of_pending_debts = Debts.Count;
-
-            ErrorMessage = string.Empty; // Clear error message if successful
+            ErrorMessage = string.Empty;
+            FilterSelection = "Transaction"; // Clear error message if successful
         }
         else
         {

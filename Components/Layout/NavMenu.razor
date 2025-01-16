@@ -1,6 +1,6 @@
 ﻿@* Shared/NavMenu.razor *@
 @using Microsoft.AspNetCore.Components
-
+@using Expenses_tracker.Services
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Expenses Tracker</a>
@@ -27,12 +27,23 @@
                     </NavLink>
                 </li>
             </ul>
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <span class="navbar-text">Welcome, <strong>@UserName</strong></span> <!-- Dynamic Username -->
                 <a href="/">
-                    <button class="btn btn-outline-dark" type="button">Logout</button> 
+                    <button class="btn btn-outline-dark" type="button">Logout</button>
                 </a>
             </div>
         </div>
+
     </div>
 </nav>
+
+@code{
+    public string UserName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserName = StaticValue.Username;
+    }
+ }
 

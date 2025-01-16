@@ -13,6 +13,7 @@ namespace Expenses_tracker.Services
         public static decimal TotalBalance;
         public static string CurrencyType;
         public static string CurrencySymbol;
+        public static string Username;
         public static string filePath = "C:\\Users\\sthar\\OneDrive\\Desktop\\Kharcha_Desktop_Application\\Database\\users.json";
     }
 }

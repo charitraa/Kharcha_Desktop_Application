@@ -97,6 +97,7 @@ namespace Expenses_tracker.Services
                 return false; // User not found
             }
             StaticValue.UserId = user.Id;
+            StaticValue.Username = user.Username;
             CurrencyHelper.SetCurrencySymbol(user.type);
 
             // Validate password
